@@ -9,5 +9,13 @@ jobs:
   test_run:
     runs-on: ubuntu-latest
     steps:
-      - name: test_run
-        run: echo "Hello World"
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Set-up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run test
+        run: npm run test
