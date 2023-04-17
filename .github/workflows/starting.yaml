@@ -19,3 +19,9 @@ jobs:
         run: npm ci
       - name: Run test
         run: npm run test
+  deployment:   
+    needs: [test_run]
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy build
+        run: npm run build
