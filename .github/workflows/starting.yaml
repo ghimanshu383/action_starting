@@ -19,7 +19,7 @@ jobs:
         run: npm ci
       - name: Run test
         run: npm run test
-  deployment:   
+  build:   
     needs: [test_run]
     runs-on: ubuntu-latest
     steps:
@@ -33,3 +33,15 @@ jobs:
         run: npm ci
       - name: deploy build
         run: npm run build
+        ## as the job is completed the data is lost as the runnier is shut down to save the same we need to use the artifacts
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist
+  deployment: 
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: deployment
+        run: echo "now running deployment"
