@@ -53,9 +53,9 @@ jobs:
         run: echo "now running deployment"
       - name: download-artifacts
         uses: actions/download-artifact@v3
-      - name: Getting output from build
-        run: echo "${{ needs.build.outputs.script-files }}"
         with: 
           name: dist-files
+      - name: Getting output from build
+        run: echo "${{ needs.build.outputs.script-files }}"
       - name: see contents
         run: ls
