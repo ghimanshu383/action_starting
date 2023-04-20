@@ -62,7 +62,9 @@ jobs:
         with: 
           name: dist-files
       - name: Getting output from build
-        if: steps.download_artifacts.outcome = 'success'
-        run: echo "${{ needs.build.outputs.script-files }}"
+        if: steps.download_artifacts.outcome == 'success'
+        run: |
+          echo "Printing the output"
+          echo "${{ needs.build.outputs.script-files }}"
       - name: see contents
         run: ls
