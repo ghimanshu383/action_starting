@@ -16,11 +16,14 @@ jobs:
         with:
           node-version: 18
       - name: setting dependency cache
+        id: node_cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm 
+          # we ca use the cache the node modules folder in place of the npm directory to make the execution faster path: ~/.npm 
+          path: node_modules
           key: dep-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
+        if: ${{ steps.node_cache.output.cache_hit }} != 'true'
         run: npm ci
       - name: Run test
         run: npm run test
@@ -36,7 +39,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: checkout for cache
+        id: cache_setup
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: dep-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
+        if: steps.cache_setup.outputs.cache-hit != 'true'
         run: npm ci
       - name: deploy build
         run: npm run build
@@ -62,6 +72,7 @@ jobs:
         with: 
           name: dist-files
       - name: Getting output from build
+      ## There are many other function which are helpful to overwrite the default behaviour of the actions like the failure(), success() cancelled() and always()
         if: steps.download_artifacts.outcome == 'success'
         run: |
           echo "Printing the output"
