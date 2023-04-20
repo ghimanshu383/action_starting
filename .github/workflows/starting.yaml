@@ -15,6 +15,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: setting dependency cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm 
+          key: dep-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         run: npm ci
       - name: Run test
@@ -52,10 +57,12 @@ jobs:
       - name: deployment
         run: echo "now running deployment"
       - name: download-artifacts
+        id: download_artifacts
         uses: actions/download-artifact@v3
         with: 
           name: dist-files
       - name: Getting output from build
+        if: steps.download_artifacts.outcome = 'success'
         run: echo "${{ needs.build.outputs.script-files }}"
       - name: see contents
         run: ls
